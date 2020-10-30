@@ -8,10 +8,10 @@ def get_session():
     session_id = get_report_ctx().session_id
     return session_id
 
-def state(column,value,engine,session_id):
+def write_state(column,value,engine,session_id):
     engine.execute("UPDATE %s SET %s='%s'" % (session_id,column,value))
 
-def state_df(df,session_id):
+def write_state_df(df,session_id):
     df.to_sql('%s' % (session_id),engine,index=False,if_exists='replace',chunksize=1000)
 
 def read_state(column,engine,session_id):
@@ -29,7 +29,7 @@ def read_state_df(session_id):
 if __name__ == '__main__':
 
     #Creating PostgreSQL client
-    engine = create_engine('postgresql://postgres:12345678@localhost:5432/postgres')
+    engine = create_engine('postgresql://postgres:<password>@localhost:5432/postgres')
 
     #Getting session ID
     session_id = get_session()
@@ -52,13 +52,13 @@ if __name__ == '__main__':
         
     elif page == 'Page Two':
         size = st.text_input('Matrix size',read_state('size',engine,session_id))
-        state('size',size,engine,session_id)
+        write_state('size',size,engine,session_id)
         size = int(read_state('size',engine,session_id))
 
         if st.button('Click'):
             data = [[0 for (size) in range((size))] for y in range((size))]
             df = pd.DataFrame(data)
-            state_df(df,session_id + '_df')
+            write_state_df(df,session_id + '_df')
 
         if read_state_df(session_id + '_df').empty is False:
             df = read_state_df(session_id + '_df')
