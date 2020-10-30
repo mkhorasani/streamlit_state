@@ -6,6 +6,8 @@ from streamlit.report_thread import get_report_ctx
 
 def get_session():
     session_id = get_report_ctx().session_id
+    session_id = session_id.replace('-','_')
+    session_id = '_id_' + session_id
     return session_id
 
 def write_state(column,value,engine,session_id):
@@ -33,8 +35,6 @@ if __name__ == '__main__':
 
     #Getting session ID
     session_id = get_session()
-    session_id = session_id.replace('-','_')
-    session_id = '_id_' + session_id
 
     #Creating session state tables
     engine.execute("CREATE TABLE IF NOT EXISTS %s (size text)" % (session_id))
