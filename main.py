@@ -13,7 +13,7 @@ def get_session_id():
 def write_state(column,value,engine,session_id):
     engine.execute("UPDATE %s SET %s='%s'" % (session_id,column,value))
 
-def write_state_df(df,session_id):
+def write_state_df(df,engine,session_id):
     df.to_sql('%s' % (session_id),engine,index=False,if_exists='replace',chunksize=1000)
 
 def read_state(column,engine,session_id):
@@ -21,7 +21,7 @@ def read_state(column,engine,session_id):
     query_return = query_return.first()[0]
     return query_return
 
-def read_state_df(session_id):
+def read_state_df(engine,session_id):
     try:
         df = pd.read_sql_table(session_id,con=engine)
     except:
@@ -31,7 +31,7 @@ def read_state_df(session_id):
 if __name__ == '__main__':
 
     #Creating PostgreSQL client
-    engine = create_engine('postgresql://<username>:<password>@localhost:5432/<tablename>')
+    engine = create_engine('postgresql://<username>:<password>@localhost:5432/<database name>')
 
     #Getting session ID
     session_id = get_session_id()
@@ -58,9 +58,9 @@ if __name__ == '__main__':
         if st.button('Click'):
             data = [[0 for (size) in range((size))] for y in range((size))]
             df = pd.DataFrame(data)
-            write_state_df(df,session_id + '_df')
+            write_state_df(df,engine,session_id + '_df')
 
-        if read_state_df(session_id + '_df').empty is False:
-            df = read_state_df(session_id + '_df')
+        if read_state_df(engine,session_id + '_df').empty is False:
+            df = read_state_df(engine,session_id + '_df')
             st.write(df)
     
