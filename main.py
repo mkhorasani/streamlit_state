@@ -4,7 +4,7 @@ import psycopg2
 from sqlalchemy import create_engine
 from streamlit.report_thread import get_report_ctx
 
-def get_session():
+def get_session_id():
     session_id = get_report_ctx().session_id
     session_id = session_id.replace('-','_')
     session_id = '_id_' + session_id
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     engine = create_engine('postgresql://postgres:<password>@localhost:5432/postgres')
 
     #Getting session ID
-    session_id = get_session()
+    session_id = get_session_id()
 
     #Creating session state tables
     engine.execute("CREATE TABLE IF NOT EXISTS %s (size text)" % (session_id))
