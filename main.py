@@ -17,9 +17,9 @@ def write_state_df(df,engine,session_id):
     df.to_sql('%s' % (session_id),engine,index=False,if_exists='replace',chunksize=1000)
 
 def read_state(column,engine,session_id):
-    query_return = engine.execute("SELECT %s FROM %s" % (column,session_id))
-    query_return = query_return.first()[0]
-    return query_return
+    state_var = engine.execute("SELECT %s FROM %s" % (column,session_id))
+    state_var = state_var.first()[0]
+    return state_var
 
 def read_state_df(engine,session_id):
     try:
