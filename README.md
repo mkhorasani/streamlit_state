@@ -1,4 +1,4 @@
-*Streamlit State
+#Streamlit State
 
 A stateful implementation of Streamlit using PostgreSQL.
 
